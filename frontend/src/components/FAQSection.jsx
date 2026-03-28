@@ -1,5 +1,6 @@
-import React from 'react';
-import { faqItems } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { faqItems as mockFaq } from '../data/mockData';
+import { fetchFAQ } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight } from 'lucide-react';
@@ -12,6 +13,11 @@ import {
 
 const FAQSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [faqItems, setFaqItems] = useState(mockFaq);
+
+  useEffect(() => {
+    fetchFAQ().then(setFaqItems);
+  }, []);
 
   return (
     <section id="faq" ref={ref} className="py-24 bg-[#FAFAFA]">

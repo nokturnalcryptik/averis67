@@ -1,11 +1,17 @@
-import React from 'react';
-import { pricingPlans } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { pricingPlans as mockPricing } from '../data/mockData';
+import { fetchPricing } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Check, Star } from 'lucide-react';
 
 const PricingSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [pricingPlans, setPricingPlans] = useState(mockPricing);
+
+  useEffect(() => {
+    fetchPricing().then(setPricingPlans);
+  }, []);
 
   return (
     <section id="pricing" ref={ref} className="py-24 bg-white">

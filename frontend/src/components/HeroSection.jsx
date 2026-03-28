@@ -1,9 +1,24 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { submitWaitlist } from '../services/api';
 
 const HeroSection = () => {
   const [aiInput, setAiInput] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmitAI = async () => {
+    if (!aiInput.trim() || submitting) return;
+    setSubmitting(true);
+    try {
+      await submitWaitlist(aiInput);
+      setAiInput('');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden">
@@ -59,7 +74,11 @@ const HeroSection = () => {
                 onChange={(e) => setAiInput(e.target.value)}
                 className="flex-1 text-sm text-gray-700 placeholder-gray-400 bg-transparent outline-none"
               />
-              <button className="ml-2 w-8 h-8 bg-[#5B6CF7] rounded-full flex items-center justify-center text-white hover:bg-[#4A5BE6] transition-colors duration-200">
+              <button
+                onClick={handleSubmitAI}
+                disabled={submitting}
+                className="ml-2 w-8 h-8 bg-[#5B6CF7] rounded-full flex items-center justify-center text-white hover:bg-[#4A5BE6] transition-colors duration-200 disabled:opacity-50"
+              >
                 <ArrowUp size={14} />
               </button>
             </div>

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { featureTabs, caseItems, caseTags } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { featureTabs as mockTabs, caseItems as mockCaseItems, caseTags as mockCaseTags } from '../data/mockData';
+import { fetchFeatures } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
@@ -30,6 +31,15 @@ const tagIcons = {
 const FeaturesSection = () => {
   const [activeTab, setActiveTab] = useState('Cases');
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [featureData, setFeatureData] = useState({
+    tabs: mockTabs,
+    caseItems: mockCaseItems,
+    caseTags: mockCaseTags,
+  });
+
+  useEffect(() => {
+    fetchFeatures().then(setFeatureData);
+  }, []);
 
   return (
     <section id="features" ref={ref} className="py-24 bg-[#FAFAFA]">
@@ -50,7 +60,7 @@ const FeaturesSection = () => {
 
         {/* Tabs */}
         <div className="flex flex-wrap justify-center gap-1 mb-10 bg-white p-1.5 rounded-xl border border-gray-200 max-w-fit mx-auto">
-          {featureTabs.map((tab) => {
+          {featureData.tabs.map((tab) => {
             const Icon = tabIcons[tab];
             const isActive = activeTab === tab;
             return (
@@ -79,7 +89,7 @@ const FeaturesSection = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {activeTab === 'Cases' && <CasesContent />}
+            {activeTab === 'Cases' && <CasesContent caseItems={featureData.caseItems} caseTags={featureData.caseTags} />}
             {activeTab !== 'Cases' && (
               <div className="feature-card bg-white rounded-2xl border border-gray-200 p-12 text-center">
                 <div className="w-16 h-16 bg-[#5B6CF7]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -98,7 +108,7 @@ const FeaturesSection = () => {
   );
 };
 
-const CasesContent = () => {
+const CasesContent = ({ caseItems, caseTags }) => {
   return (
     <div className="grid md:grid-cols-2 gap-8">
       {/* Left - Description */}

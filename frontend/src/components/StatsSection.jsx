@@ -1,11 +1,17 @@
-import React from 'react';
-import { stats } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { stats as mockStats } from '../data/mockData';
+import { fetchStats } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from 'react-countup';
 
 const StatsSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [stats, setStats] = useState(mockStats);
+
+  useEffect(() => {
+    fetchStats().then(setStats);
+  }, []);
 
   return (
     <section ref={ref} className="py-16 bg-white">

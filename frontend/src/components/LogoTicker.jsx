@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { robloxGroups } from '../data/mockData';
+import { fetchGroups } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 const LogoTicker = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
-  const tripleGroups = [...robloxGroups, ...robloxGroups, ...robloxGroups];
+  const [groups, setGroups] = useState(robloxGroups);
+
+  useEffect(() => {
+    fetchGroups().then(setGroups);
+  }, []);
+
+  const tripleGroups = [...groups, ...groups, ...groups];
 
   return (
     <section ref={ref} className="py-10 overflow-hidden bg-white">

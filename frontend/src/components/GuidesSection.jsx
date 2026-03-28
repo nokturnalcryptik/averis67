@@ -1,11 +1,17 @@
-import React from 'react';
-import { guideArticles } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { guideArticles as mockGuides } from '../data/mockData';
+import { fetchGuides } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ArrowRight, Clock } from 'lucide-react';
 
 const GuidesSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [guideArticles, setGuideArticles] = useState(mockGuides);
+
+  useEffect(() => {
+    fetchGuides().then(setGuideArticles);
+  }, []);
 
   return (
     <section id="guides" ref={ref} className="py-24 bg-white">

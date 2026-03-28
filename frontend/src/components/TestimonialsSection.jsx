@@ -1,11 +1,17 @@
-import React from 'react';
-import { testimonials } from '../data/mockData';
+import React, { useState, useEffect } from 'react';
+import { testimonials as mockTestimonials } from '../data/mockData';
+import { fetchTestimonials } from '../services/api';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Quote } from 'lucide-react';
 
 const TestimonialsSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [testimonials, setTestimonials] = useState(mockTestimonials);
+
+  useEffect(() => {
+    fetchTestimonials().then(setTestimonials);
+  }, []);
 
   return (
     <section ref={ref} className="py-24 bg-[#FAFAFA]">
